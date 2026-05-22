@@ -21,11 +21,14 @@ import { accountsController }
 import { validate }
   from "./api/jwt-utils.js";
 
-const __filename = fileURLToPath(import.meta.url);
+const __filename =
+  fileURLToPath(import.meta.url);
 
-const __dirname = path.dirname(__filename);
+const __dirname =
+  path.dirname(__filename);
 
-const result = dotenv.config();
+const result =
+  dotenv.config();
 
 if (result.error) {
 
@@ -76,25 +79,32 @@ Handlebars.registerHelper(
 
 async function init() {
 
-  const server = Hapi.server({
+  const server =
+    Hapi.server({
 
-    port: process.env.PORT || 3000,
+      port:
+        process.env.PORT || 3000,
 
-    routes: {
+      host:
+        "0.0.0.0",
 
-      cors: {
+      routes: {
 
-        origin: [
-          "http://localhost:5173"
-        ],
+        cors: {
 
-        credentials: true
+          origin: [
+            "http://localhost:5173",
+            "https://thewanderingdesk.netlify.app"
+          ],
+
+          credentials:
+            true
+
+        }
 
       }
 
-    }
-
-  });
+    });
 
   await server.register(Cookie);
 
@@ -107,9 +117,11 @@ async function init() {
     Vision,
 
     {
-      plugin: HapiSwagger,
+      plugin:
+        HapiSwagger,
 
-      options: swaggerOptions,
+      options:
+        swaggerOptions,
     },
 
   ]);
@@ -120,21 +132,28 @@ async function init() {
 
     engines: {
 
-      hbs: Handlebars,
+      hbs:
+        Handlebars,
 
     },
 
-    relativeTo: __dirname,
+    relativeTo:
+      __dirname,
 
-    path: "./views",
+    path:
+      "./views",
 
-    layoutPath: "./views/layouts",
+    layoutPath:
+      "./views/layouts",
 
-    partialsPath: "./views/partials",
+    partialsPath:
+      "./views/partials",
 
-    layout: true,
+    layout:
+      true,
 
-    isCached: false,
+    isCached:
+      false,
 
   });
 
@@ -145,16 +164,22 @@ async function init() {
 
       cookie: {
 
-        name: process.env.cookie_name,
+        name:
+          process.env.cookie_name,
 
         password:
           process.env.cookie_password,
 
-        isSecure: false,
+        isSecure:
+          process.env.NODE_ENV === "production",
+
+        isSameSite:
+          "Lax",
 
       },
 
-      redirectTo: "/",
+      redirectTo:
+        "/",
 
       validate:
         accountsController.validate,
@@ -174,14 +199,18 @@ async function init() {
 
       verifyOptions: {
 
-        algorithms: ["HS256"]
+        algorithms: [
+          "HS256"
+        ]
 
       },
 
     }
   );
 
-  server.auth.default("session");
+  server.auth.default(
+    "session"
+  );
 
   db.init("mongo");
 
