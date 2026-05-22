@@ -35,7 +35,9 @@ The Wandering Desk API is a RESTful backend service that powers The Wandering De
 
 ## Live API
 
-https://your-render-api-url.onrender.com
+## Live API
+
+https://thewanderingdesk-api.onrender.com
 
 ## Installation
 
