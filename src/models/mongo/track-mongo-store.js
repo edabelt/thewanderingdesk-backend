@@ -3,75 +3,205 @@ import { Track } from "./track.js";
 export const trackMongoStore = {
 
   async getAllTracks() {
-    const tracks = await Track.find().lean();
+
+    const tracks =
+      await Track.find().lean();
+
     return tracks;
+
   },
 
   async addTrack(playlistId, track) {
 
     const newTrack = {
-      name: track.name,
-      locationName: track.locationName,
-      latitude: Number(track.latitude),
-      longitude: Number(track.longitude),
-      description: track.description,
-      image: track.image,
-      playlistid: playlistId
+
+      name:
+        track.name,
+
+      locationName:
+        track.locationName,
+
+      latitude:
+        Number(track.latitude),
+
+      longitude:
+        Number(track.longitude),
+
+      description:
+        track.description,
+
+      image:
+        track.image,
+
+      userid:
+        track.userid,
+
+      playlistid:
+        playlistId
+
     };
 
-    const trackDoc = new Track(newTrack);
-    const savedTrack = await trackDoc.save();
+    const trackDoc =
+      new Track(newTrack);
 
-    return this.getTrackById(savedTrack._id);
+    const savedTrack =
+      await trackDoc.save();
+
+    return this.getTrackById(
+      savedTrack._id
+    );
+
   },
 
   async getTracksByPlaylistId(id) {
-    const tracks = await Track.find({ playlistid: id }).lean();
-    return tracks;
+
+    const tracks =
+      await Track.find({
+        playlistid: id
+      }).lean();
+
+    const tracksWithWeather =
+      await Promise.all(
+
+        tracks.map(async (track) => {
+
+          try {
+
+            const apiKey =
+              process.env.OPENWEATHER_API_KEY;
+
+            const response =
+              await fetch(
+                `https://api.openweathermap.org/data/2.5/weather?lat=${track.latitude}&lon=${track.longitude}&units=metric&appid=${apiKey}`
+              );
+
+            const data =
+              await response.json();
+
+            if (
+              data.weather &&
+              data.main
+            ) {
+
+              track.weather = {
+
+                description:
+                  data.weather[0].description,
+
+                icon:
+                  data.weather[0].icon,
+
+                temp:
+                  data.main.temp
+
+              };
+
+            }
+
+            return track;
+
+          } catch (error) {
+
+            console.log(error);
+
+            return track;
+
+          }
+
+        })
+
+      );
+
+    return tracksWithWeather;
+
   },
 
   async getTrackById(id) {
+
     if (id) {
-      const track = await Track.findOne({ _id: id }).lean();
+
+      const track =
+        await Track.findOne({
+          _id: id
+        }).lean();
+
       return track;
+
     }
+
     return null;
+
   },
 
   async deleteTrack(id) {
+
     try {
-      await Track.deleteOne({ _id: id });
+
+      await Track.deleteOne({
+        _id: id
+      });
+
     } catch (error) {
+
       console.log("bad id");
+
     }
+
   },
 
   async deleteAllTracks() {
+
     await Track.deleteMany({});
+
   },
 
   async updateTrack(track, updatedTrack) {
 
     if (!track || !track._id) {
-      throw new Error("Invalid track supplied for update");
+
+      throw new Error(
+        "Invalid track supplied for update"
+      );
+
     }
 
-    const trackDoc = await Track.findOne({ _id: track._id });
+    const trackDoc =
+      await Track.findOne({
+        _id: track._id
+      });
 
     if (!trackDoc) {
-      throw new Error("Track not found");
+
+      throw new Error(
+        "Track not found"
+      );
+
     }
 
-    trackDoc.name = updatedTrack.name;
-    trackDoc.locationName = updatedTrack.locationName;
-    trackDoc.latitude = Number(updatedTrack.latitude);
-    trackDoc.longitude = Number(updatedTrack.longitude);
-    trackDoc.description = updatedTrack.description;
-    trackDoc.image = updatedTrack.image;
+    trackDoc.name =
+      updatedTrack.name;
+
+    trackDoc.locationName =
+      updatedTrack.locationName;
+
+    trackDoc.latitude =
+      Number(updatedTrack.latitude);
+
+    trackDoc.longitude =
+      Number(updatedTrack.longitude);
+
+    trackDoc.description =
+      updatedTrack.description;
+
+    trackDoc.image =
+      updatedTrack.image;
 
     await trackDoc.save();
 
-    return trackDoc;
+    return this.getTrackById(
+      trackDoc._id
+    );
+
   }
 
 };

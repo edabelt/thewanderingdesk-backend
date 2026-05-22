@@ -12,6 +12,7 @@ export const UserCredentialsSpec = Joi.object()
 export const UserSpec = UserCredentialsSpec.keys({
   firstName: Joi.string().example("David").required(),
   lastName: Joi.string().example("Beltran").required(),
+  role: Joi.string().default("user").optional(),
 }).label("UserDetails");
 
 export const UserSpecPlus = UserSpec.keys({
@@ -55,27 +56,30 @@ export const TrackSpec = Joi.object()
       .example("Famous coastal cliffs in Ireland."),
 
     image: Joi.string()
-      .uri()
-      .allow("")
-      .optional()
-      .example("https://example.com/cliffs.jpg"),
+  .allow("")
+  .optional()
+  .example("https://example.com/cliffs.jpg"),
 
     playlistid: IdSpec,
   })
-  .label("PlaceMark");
+  .label("Workspace");
 
 export const TrackSpecPlus = TrackSpec.keys({
   _id: IdSpec,
   __v: Joi.number(),
-}).label("PlaceMarkPlus");
+}).label("WorkspacePlus");
 
-export const TrackArraySpec = Joi.array().items(TrackSpecPlus).label("PlaceMarkArray");
+export const TrackArraySpec = Joi.array().items(TrackSpecPlus).label("WorkspaceArray");
 
 export const PlaylistSpec = Joi.object()
   .keys({
-    title: Joi.string().required().example("Irish Landmarks"),
+    title: Joi.string()
+      .required()
+      .example("Irish Landmarks"),
+
     userid: IdSpec,
-    tracks: TrackArraySpec,
+
+    tracks: TrackArraySpec.optional(),
   })
   .label("Category");
 
@@ -88,7 +92,21 @@ export const PlaylistArraySpec = Joi.array().items(PlaylistSpecPlus).label("Cate
 
 export const JwtAuth = Joi.object()
   .keys({
-    success: Joi.boolean().example(true).required(),
-    token: Joi.string().example("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.example.signature").required(),
+
+    success:
+      Joi.boolean()
+        .example(true)
+        .required(),
+
+    token:
+      Joi.string()
+        .example(
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.example.signature"
+        )
+        .required(),
+
+    user:
+      UserSpecPlus.required()
+
   })
   .label("JwtAuth");

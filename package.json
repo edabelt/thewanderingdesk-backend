@@ -1,5 +1,5 @@
 {
-  "name": "PlaceMark",
+  "name": "thewanderingdesk-api",
   "version": "0.10.1",
   "description": "A Node.js and Hapi application that allows users to create and manage geographic points of interest.",
   "main": "index.js",
@@ -32,6 +32,7 @@
     "@hapi/hapi": "^21.3.12",
     "@hapi/inert": "^7.1.0",
     "@hapi/vision": "^7.0.3",
+    "bcrypt": "^6.0.0",
     "dotenv": "^16.4.7",
     "firebase": "^12.10.0",
     "handlebars": "^4.7.8",

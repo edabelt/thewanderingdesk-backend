@@ -15,7 +15,7 @@ export const dashboardController = {
       const playlists = await db.playlistStore.getUserPlaylists(loggedInUser._id);
 
       const viewData = {
-        title: "PlaceMark Dashboard",
+        title: "Workspace Dashboard",
         user: loggedInUser,
         playlists: playlists,
       };
@@ -53,10 +53,31 @@ export const dashboardController = {
   },
 
   deletePlaylist: {
-    handler: async function (request, h) {
-      const playlist = await db.playlistStore.getPlaylistById(request.params.id);
-      await db.playlistStore.deletePlaylistById(playlist._id);
+  handler: async function (request, h) {
+
+    const loggedInUser = request.auth.credentials;
+
+    const playlist =
+      await db.playlistStore.getPlaylistById(
+        request.params.id
+      );
+
+    const isOwner =
+      playlist.userid.toString() ===
+      loggedInUser._id.toString();
+
+    const isAdmin =
+      loggedInUser.role === "admin";
+
+    if (!isOwner && !isAdmin) {
       return h.redirect("/dashboard");
-    },
+    }
+
+    await db.playlistStore.deletePlaylistById(
+      playlist._id
+    );
+
+    return h.redirect("/dashboard");
   },
+},
 };

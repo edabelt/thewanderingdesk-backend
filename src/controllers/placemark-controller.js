@@ -7,13 +7,37 @@ function capitalize(text) {
 }
 
 export const placemarkController = {
+
   index: {
     handler: async function (request, h) {
-      const playlist = await db.playlistStore.getPlaylistById(request.params.id);
-      const track = await db.trackStore.getTrackById(request.params.trackid);
+
+      const loggedInUser =
+        request.auth.credentials;
+
+      const playlist =
+        await db.playlistStore.getPlaylistById(
+          request.params.id
+        );
+
+      const track =
+        await db.trackStore.getTrackById(
+          request.params.trackid
+        );
+
+      const isOwner =
+        track.userid &&
+        track.userid.toString() ===
+          loggedInUser._id.toString();
+
+      const isAdmin =
+        loggedInUser.role === "admin";
+
+      if (!isOwner && !isAdmin) {
+        return h.redirect("/dashboard");
+      }
 
       const viewData = {
-        title: "Edit PlaceMark",
+        title: "Edit Workspace",
         playlist: playlist,
         track: track,
       };
@@ -25,14 +49,24 @@ export const placemarkController = {
   update: {
     validate: {
       payload: TrackSpec,
+
       options: { abortEarly: false },
+
       failAction: async function (request, h, error) {
-        const playlist = await db.playlistStore.getPlaylistById(request.params.id);
-        const track = await db.trackStore.getTrackById(request.params.trackid);
+
+        const playlist =
+          await db.playlistStore.getPlaylistById(
+            request.params.id
+          );
+
+        const track =
+          await db.trackStore.getTrackById(
+            request.params.trackid
+          );
 
         return h
           .view("placemark-view", {
-            title: "Edit PlaceMark Error",
+            title: "Edit Workspace Error",
             playlist: playlist,
             track: track,
             errors: error.details,
@@ -43,20 +77,58 @@ export const placemarkController = {
     },
 
     handler: async function (request, h) {
-      const track = await db.trackStore.getTrackById(request.params.trackid);
+
+      const loggedInUser =
+        request.auth.credentials;
+
+      const track =
+        await db.trackStore.getTrackById(
+          request.params.trackid
+        );
+
+      const isOwner =
+        track.userid &&
+        track.userid.toString() ===
+          loggedInUser._id.toString();
+
+      const isAdmin =
+        loggedInUser.role === "admin";
+
+      if (!isOwner && !isAdmin) {
+        return h.redirect("/dashboard");
+      }
 
       const newTrack = {
+
         name: capitalize(request.payload.name),
-        locationName: capitalize(request.payload.locationName),
-        latitude: Number(request.payload.latitude),
-        longitude: Number(request.payload.longitude),
-        description: capitalize(request.payload.description),
+
+        locationName: capitalize(
+          request.payload.locationName
+        ),
+
+        latitude: Number(
+          request.payload.latitude
+        ),
+
+        longitude: Number(
+          request.payload.longitude
+        ),
+
+        description: capitalize(
+          request.payload.description
+        ),
+
         image: request.payload.image,
       };
 
-      await db.trackStore.updateTrack(track, newTrack);
+      await db.trackStore.updateTrack(
+        track,
+        newTrack
+      );
 
-      return h.redirect(`/category/${request.params.id}`);
+      return h.redirect(
+        `/category/${request.params.id}`
+      );
     },
   },
 };

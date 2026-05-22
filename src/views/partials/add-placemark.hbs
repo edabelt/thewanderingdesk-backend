@@ -1,5 +1,5 @@
 <form id="add-placemark-form" class="box" action="/category/{{playlist._id}}/addplacemark" method="POST">
-  <h2 class="title is-5">Add New PlaceMark</h2>
+  <h2 class="title is-5">Add New Workspace</h2>
 
   <div class="field">
     <label class="label">Name</label>
@@ -49,7 +49,7 @@
   <div class="field">
     <div class="control">
       <button id="submitButton" class="button is-primary is-fullwidth" type="submit">
-        Add PlaceMark
+        Add Workspace
       </button>
     </div>
   </div>
@@ -106,7 +106,7 @@
 
       window.previewMarker = L.marker([lat, lon])
         .addTo(window.map)
-        .bindPopup("New PlaceMark Preview")
+        .bindPopup("New Workspace Preview")
         .openPopup();
     }
   };
@@ -137,7 +137,7 @@
         console.error(error);
         alert("Image upload failed");
         submitButton.disabled = false;
-        submitButton.textContent = "Add PlaceMark";
+        submitButton.textContent = "Add Workspace";
         return;
       }
     }

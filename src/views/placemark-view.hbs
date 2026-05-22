@@ -5,7 +5,7 @@
     <div class="columns is-centered">
       <div class="column is-half">
         <div class="box">
-          <h1 class="title is-4">Edit PlaceMark</h1>
+          <h1 class="title is-4">Edit Workspace</h1>
 
           {{> error}}
 
@@ -65,7 +65,7 @@
             <div class="field">
               <div class="control">
                 <button class="button is-primary is-fullwidth">
-                  Update PlaceMark
+                  Update Workspace
                 </button>
               </div>
             </div>
@@ -108,7 +108,7 @@
 
     if (!isNaN(lat) && !isNaN(lon)) {
       editMarker = L.marker([lat, lon]).addTo(editMap)
-        .bindPopup("Current PlaceMark")
+        .bindPopup("Current Workspace")
         .openPopup();
     }
   });
@@ -146,7 +146,7 @@
       }
 
       editMarker = L.marker([lat, lon]).addTo(editMap)
-        .bindPopup("Updated PlaceMark Preview")
+        .bindPopup("Updated Workspace Preview")
         .openPopup();
     }
   }
