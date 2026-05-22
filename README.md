@@ -1,43 +1,76 @@
-# PlaceMark
+# The Wandering Desk API
 
-PlaceMark is a web application that allows users to discover, organise, and manage their favourite places. Users can create placemarks, group them into categories, upload images, visualise locations on a map, and access live weather information.
+The Wandering Desk API is a RESTful backend service that powers The Wandering Desk web application. It allows users to create and manage workspace collections, upload images, visualise locations on interactive maps, and access live weather information.
 
 ## Features
 
-- User authentication (sign up, log in, log out)
-- Create, edit, and delete placemarks
-- Organise placemarks into categories
-- Upload images associated with placemarks
-- Interactive map integration using Leaflet
-- Live weather data using the OpenWeather API
-- Responsive user interface built with Bulma
+* JWT authentication and protected API routes
+* Secure password hashing with bcrypt
+* Create, edit, and delete workspace collections
+* Create, edit, and delete workspaces
+* Interactive weather-based map layers using Leaflet
+* OpenWeather API integration
+* Firebase image upload support
+* Analytics support for SvelteKit dashboard visualisations
+* User-specific collections and session management
+* RESTful API architecture
 
 ## Technologies Used
 
 ### Backend
-- Node.js
-- Hapi.js
-- MongoDB Atlas
-- Mongoose
 
-### Frontend
-- Handlebars (HBS)
-- Bulma CSS
-- Leaflet.js
+* Node.js
+* Hapi.js
+* MongoDB Atlas
+* Mongoose
+* JWT Authentication
+* Joi Validation
+* bcrypt
 
 ### External Services
-- OpenWeather API
-- Firebase Storage
-- Render (deployment)
 
-## Live Application
+* OpenWeather API
+* Firebase Storage
+* Render (deployment)
 
-https://placemark-a2vl.onrender.com
+## Live API
+
+https://your-render-api-url.onrender.com
 
 ## Installation
 
 ### Clone the repository
 
 ```bash
-git clone https://github.com/your-username/placemark.git
-cd placemark
+git clone https://github.com/edabelt/thewanderingdesk-api.git
+cd thewanderingdesk-api
+```
+
+### Install dependencies
+
+```bash
+npm install
+```
+
+### Configure environment variables
+
+Create a `.env` file in the root directory:
+
+```env
+cookie_name=thewanderingdesk_cookie
+cookie_password=your_secret_password
+db=your_mongodb_connection_string
+PORT=3000
+```
+
+### Start the server
+
+```bash
+npm start
+```
+
+The API will run on:
+
+```txt
+http://localhost:3000
+```
