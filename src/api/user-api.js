@@ -167,6 +167,11 @@ export const userApi = {
         const token =
           createToken(user);
 
+        console.log(
+          "LOGIN USER ROLE:",
+          user.role
+        );
+
         return h.response({
           success: true,
 

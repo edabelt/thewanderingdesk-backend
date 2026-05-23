@@ -13,6 +13,16 @@ export const trackMongoStore = {
 
   async addTrack(playlistId, track) {
 
+    const image =
+      track.image || "";
+
+    const images =
+      track.images && Array.isArray(track.images)
+        ? track.images
+        : image
+          ? [image]
+          : [];
+
     const newTrack = {
 
       name:
@@ -31,7 +41,10 @@ export const trackMongoStore = {
         track.description,
 
       image:
-        track.image,
+        image,
+
+      images:
+        images,
 
       userid:
         track.userid,
@@ -178,6 +191,16 @@ export const trackMongoStore = {
 
     }
 
+    const image =
+      updatedTrack.image || "";
+
+    const images =
+      updatedTrack.images && Array.isArray(updatedTrack.images)
+        ? updatedTrack.images
+        : image
+          ? [image]
+          : [];
+
     trackDoc.name =
       updatedTrack.name;
 
@@ -194,7 +217,10 @@ export const trackMongoStore = {
       updatedTrack.description;
 
     trackDoc.image =
-      updatedTrack.image;
+      image;
+
+    trackDoc.images =
+      images;
 
     await trackDoc.save();
 

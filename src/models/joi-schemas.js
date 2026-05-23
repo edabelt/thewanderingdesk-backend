@@ -60,6 +60,17 @@ export const TrackSpec = Joi.object()
   .optional()
   .example("https://example.com/cliffs.jpg"),
 
+images: Joi.array()
+  .items(
+    Joi.string()
+      .allow("")
+  )
+  .optional()
+  .default([])
+  .example([
+    "https://example.com/cliffs-1.jpg",
+    "https://example.com/cliffs-2.jpg"
+  ]),
     playlistid: IdSpec,
   })
   .label("Workspace");

@@ -1,3 +1,6 @@
+import { adminApi }
+  from "./api/admin-api.js";
+
 import { userApi }
   from "./api/user-api.js";
 
@@ -6,6 +9,7 @@ import { categoryApi }
 
 import { placemarkApi }
   from "./api/placemark-api.js";
+
 
 export const apiRoutes = [
 
@@ -99,10 +103,16 @@ export const apiRoutes = [
     config: placemarkApi.deleteAll
   },
 
-  {
+    {
     method: "DELETE",
     path: "/api/placemarks/{id}",
     config: placemarkApi.deleteOne
   },
+
+  {
+    method: "GET",
+    path: "/api/admin/analytics",
+    config: adminApi.analytics
+  }
 
 ];
