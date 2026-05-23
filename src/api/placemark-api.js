@@ -1,5 +1,8 @@
 import Boom from "@hapi/boom";
 
+import sanitizeHtml
+  from "sanitize-html";
+
 import { db } from "../models/db.js";
 
 import {
@@ -11,6 +14,38 @@ import {
 
 import { validationError }
   from "./logger.js";
+
+function cleanText(value) {
+
+  return sanitizeHtml(
+    value || "",
+    {
+      allowedTags: [],
+      allowedAttributes: {}
+    }
+  );
+
+}
+
+function sanitizePlacemark(payload) {
+
+  return {
+    ...payload,
+
+    name:
+      cleanText(payload.name),
+
+    locationName:
+      cleanText(payload.locationName),
+
+    description:
+      cleanText(payload.description),
+
+    image:
+      cleanText(payload.image)
+  };
+
+}
 
 export const placemarkApi = {
 
@@ -44,13 +79,8 @@ export const placemarkApi = {
     tags: ["api"],
 
     response: {
-
-      schema:
-        TrackArraySpec,
-
-      failAction:
-        validationError
-
+      schema: TrackArraySpec,
+      failAction: validationError
     },
 
     description:
@@ -106,9 +136,7 @@ export const placemarkApi = {
     validate: {
 
       params: {
-
         id: IdSpec
-
       },
 
       failAction:
@@ -117,13 +145,8 @@ export const placemarkApi = {
     },
 
     response: {
-
-      schema:
-        TrackSpecPlus,
-
-      failAction:
-        validationError
-
+      schema: TrackSpecPlus,
+      failAction: validationError
     },
 
   },
@@ -139,11 +162,16 @@ export const placemarkApi = {
 
       try {
 
+        const cleanPayload =
+          sanitizePlacemark(
+            request.payload
+          );
+
         const placemark =
           await db.trackStore
             .addTrack(
               request.params.id,
-              request.payload
+              cleanPayload
             );
 
         if (placemark) {
@@ -179,23 +207,13 @@ export const placemarkApi = {
       "Returns the newly created placemark",
 
     validate: {
-
-      payload:
-        TrackSpec,
-
-      failAction:
-        validationError
-
+      payload: TrackSpec,
+      failAction: validationError
     },
 
     response: {
-
-      schema:
-        TrackSpecPlus,
-
-      failAction:
-        validationError
-
+      schema: TrackSpecPlus,
+      failAction: validationError
     },
 
   },
@@ -225,11 +243,16 @@ export const placemarkApi = {
 
         }
 
+        const cleanPayload =
+          sanitizePlacemark(
+            request.payload
+          );
+
         const updatedPlacemark =
           await db.trackStore
             .updateTrack(
               placemark,
-              request.payload
+              cleanPayload
             );
 
         return updatedPlacemark;
@@ -254,13 +277,10 @@ export const placemarkApi = {
     validate: {
 
       params: {
-
         id: IdSpec
-
       },
 
-      payload:
-        TrackSpec,
+      payload: TrackSpec,
 
       failAction:
         validationError
@@ -268,13 +288,8 @@ export const placemarkApi = {
     },
 
     response: {
-
-      schema:
-        TrackSpecPlus,
-
-      failAction:
-        validationError
-
+      schema: TrackSpecPlus,
+      failAction: validationError
     },
 
   },
@@ -362,9 +377,7 @@ export const placemarkApi = {
     validate: {
 
       params: {
-
         id: IdSpec
-
       },
 
       failAction:

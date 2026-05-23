@@ -1,5 +1,8 @@
 import Boom from "@hapi/boom";
 
+import sanitizeHtml
+  from "sanitize-html";
+
 import {
   IdSpec,
   PlaylistSpec,
@@ -8,7 +11,20 @@ import {
 
 import { db } from "../models/db.js";
 
-import { validationError } from "./logger.js";
+import { validationError }
+  from "./logger.js";
+
+function cleanText(value) {
+
+  return sanitizeHtml(
+    value || "",
+    {
+      allowedTags: [],
+      allowedAttributes: {}
+    }
+  );
+
+}
 
 export const categoryApi = {
 
@@ -148,7 +164,9 @@ export const categoryApi = {
 
         const category = {
           title:
-            request.payload.title,
+            cleanText(
+              request.payload.title
+            ),
 
           userid:
             userId
