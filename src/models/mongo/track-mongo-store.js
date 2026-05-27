@@ -11,6 +11,17 @@ export const trackMongoStore = {
 
   },
 
+  async getPublicTracks() {
+
+    const tracks =
+      await Track.find({
+        isPublic: true
+      }).lean();
+
+    return tracks;
+
+  },
+
   async addTrack(playlistId, track) {
 
     const image =
@@ -45,6 +56,12 @@ export const trackMongoStore = {
 
       images:
         images,
+
+      isPublic:
+        track.isPublic || false,
+
+      ratings:
+        [],
 
       userid:
         track.userid,
@@ -222,10 +239,71 @@ export const trackMongoStore = {
     trackDoc.images =
       images;
 
+    trackDoc.isPublic =
+      updatedTrack.isPublic || false;
+
     await trackDoc.save();
 
     return this.getTrackById(
       trackDoc._id
+    );
+
+  },
+
+  async rateTrack(
+    trackId,
+    userId,
+    score
+  ) {
+
+    const track =
+      await Track.findOne({
+        _id: trackId
+      });
+
+    if (!track) {
+
+      throw new Error(
+        "Track not found"
+      );
+
+    }
+
+    if (!track.ratings) {
+
+      track.ratings =
+        [];
+
+    }
+
+    const existingRating =
+      track.ratings.find(
+        (rating) =>
+          rating.userid.toString() ===
+          userId.toString()
+      );
+
+    if (existingRating) {
+
+      existingRating.score =
+        Number(score);
+
+    } else {
+
+      track.ratings.push({
+        userid:
+          userId,
+
+        score:
+          Number(score)
+      });
+
+    }
+
+    await track.save();
+
+    return this.getTrackById(
+      trackId
     );
 
   }

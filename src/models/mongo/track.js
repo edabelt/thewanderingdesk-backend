@@ -2,51 +2,92 @@ import Mongoose from "mongoose";
 
 const { Schema } = Mongoose;
 
-const trackSchema = new Schema({
+const ratingSchema =
+  new Schema({
 
-  name:
-    String,
+    userid: {
 
-  locationName:
-    String,
+      type:
+        Schema.Types.ObjectId,
 
-  latitude:
-    Number,
+      ref:
+        "User"
 
-  longitude:
-    Number,
+    },
 
-  description:
-    String,
+    score: {
 
-  image:
-    String,
+      type:
+        Number,
 
-  images:
-    [String],
+      min:
+        1,
 
-  // Owner of the placemark
-  userid: {
+      max:
+        5
 
-    type:
-      Schema.Types.ObjectId,
+    }
 
-    ref:
-      "User",
+  });
 
-  },
+const trackSchema =
+  new Schema({
 
-  playlistid: {
+    name:
+      String,
 
-    type:
-      Schema.Types.ObjectId,
+    locationName:
+      String,
 
-    ref:
-      "Playlist",
+    latitude:
+      Number,
 
-  },
+    longitude:
+      Number,
 
-});
+    description:
+      String,
+
+    image:
+      String,
+
+    images:
+      [String],
+
+    isPublic: {
+
+      type:
+        Boolean,
+
+      default:
+        false
+
+    },
+
+    ratings:
+      [ratingSchema],
+
+    userid: {
+
+      type:
+        Schema.Types.ObjectId,
+
+      ref:
+        "User"
+
+    },
+
+    playlistid: {
+
+      type:
+        Schema.Types.ObjectId,
+
+      ref:
+        "Playlist"
+
+    }
+
+  });
 
 export const Track =
   Mongoose.model(

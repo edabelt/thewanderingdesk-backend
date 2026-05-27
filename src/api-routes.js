@@ -10,6 +10,8 @@ import { categoryApi }
 import { placemarkApi }
   from "./api/placemark-api.js";
 
+import { communityApi }
+  from "./api/community-api.js";
 
 export const apiRoutes = [
 
@@ -41,6 +43,12 @@ export const apiRoutes = [
     method: "POST",
     path: "/api/users/authenticate",
     config: userApi.authenticate
+  },
+
+  {
+    method: "POST",
+    path: "/api/users/firebase-auth",
+    config: userApi.firebaseAuth
   },
 
   {
@@ -113,6 +121,18 @@ export const apiRoutes = [
     method: "GET",
     path: "/api/admin/analytics",
     config: adminApi.analytics
+  },
+
+  {
+    method: "GET",
+    path: "/api/community/placemarks",
+    config: communityApi.findPublic
+  },
+
+  {
+    method: "POST",
+    path: "/api/community/placemarks/{id}/rate",
+    config: communityApi.rate
   }
 
 ];

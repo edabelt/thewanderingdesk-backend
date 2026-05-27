@@ -71,6 +71,12 @@ images: Joi.array()
     "https://example.com/cliffs-1.jpg",
     "https://example.com/cliffs-2.jpg"
   ]),
+
+  isPublic: Joi.boolean()
+  .optional()
+  .default(false)
+  .example(true),
+
     playlistid: IdSpec,
   })
   .label("Workspace");
